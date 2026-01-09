@@ -404,8 +404,8 @@ def get_responses():
 def get_jwt():
     """API endpoint compatible with the original app.py"""
     access_token = request.args.get('access_token')
-    guest_uid = request.args.get('guest_uid')
-    guest_password = request.args.get('guest_password')
+    guest_uid = request.args.get('uid')
+    guest_password = request.args.get('password')
 
     if access_token:
         response = process_access_token(access_token)
