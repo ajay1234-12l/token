@@ -414,8 +414,8 @@ def get_jwt():
         else:
             return jsonify(response), 400
 
-    elif guest_uid and guest_password:
-        response = process_token(guest_uid, guest_password)
+    elif uid and password:
+        response = process_token(uid, password)
         if 'token' in response:
             return jsonify({"success": True, "BearerAuth": response['token']})
         else:
