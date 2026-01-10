@@ -407,17 +407,25 @@ def get_jwt():
     guest_uid = request.args.get('uid')
     guest_password = request.args.get('password')
 
+    # Case 1: Access token provided
     if access_token:
         response = process_access_token(access_token)
         if response.get('success'):
-            return jsonify({"success": True, "BearerAuth": response['BearerAuth']})
+            return jsonify({
+                "success": True,
+                "BearerAuth": response.get("BearerAuth")
+            })
         else:
             return jsonify(response), 400
 
-    elif uid and password:
-        response = process_token(uid, password)
+    # Case 2: Guest UID + Password provided
+    elif guest_uid and guest_password:
+        response = process_token(guest_uid, guest_password)
         if 'token' in response:
-            return jsonify({"success": True, "BearerAuth": response['token']})
+            return jsonify({
+                "success": True,
+                "BearerAuth": response['token']
+            })
         else:
             return jsonify({
                 "success": False,
@@ -425,11 +433,11 @@ def get_jwt():
                 "detail": "jwt not found in response."
             }), 500
 
+    # Case 3: Nothing provided
     return jsonify({
         "success": False,
-        "message": "missing access_token (or guest_uid + guest_password)"
+        "message": "missing access_token (or uid + password)"
     }), 400
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5030)
